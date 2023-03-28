@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import Axios from '../config/axios';
+import Card from './shared/card';
 
 const Create = () => {
+
+
+
     const [data, setData] = useState()
     const [dataId, setId] = useState(null)
     const [name, setName] = useState("")
     const [language, setLanguage] = useState("")
     const [framework, setFrameWork] = useState("")
+    const [success, setSuccess] = useState(true)
 
     const CreateRequest = async () => {
         setData()
+        setSuccess(false)
         const resp = await Axios.put('/addServer', {
             id: dataId,
             name: name,
@@ -17,6 +23,7 @@ const Create = () => {
             framework: framework
         })
         setData(resp.data)
+        setSuccess(resp.data.success)
     }
 
     return (
@@ -29,8 +36,10 @@ const Create = () => {
             <button onClick={CreateRequest}>Create Data</button>
             <div className="container">
                 {data ?
-                    <pre>{JSON.stringify(data, null, 2)}</pre> :
-                    ""
+                    <Card id={data.data.id} name={data.data.name} language={data.data.language} framework={data.data.framework} /> :
+                    <>
+                        {success ? "" : "Fields cannot be empty"}
+                    </>
                 }
             </div>
         </div>
